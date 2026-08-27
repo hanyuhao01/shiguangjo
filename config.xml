@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.shiguangju.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.shiguangju.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>拾光橘</name>
     <description>拾光橘 - 时间记录工具</description>
     <author email="support@example.com" href="">拾光橘团队</author>
@@ -16,7 +16,7 @@
     <icon src="icon-192.png" width="192" height="192" />
     <icon src="icon-512.png" width="512" height="512" />
 
-    <!-- 启动屏已改用新方式，此处不再使用旧 splash 标签 -->
+    <!-- 启动屏新方式 -->
     <preference name="AndroidWindowSplashScreenAnimatedIcon" value="icon-512.png" />
 
     <!-- 基本偏好 -->
@@ -33,7 +33,7 @@
         <preference name="AndroidLaunchMode" value="singleTask" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="icon-512.png" />
 
-        <!-- 必要权限：悬浮窗、前台服务、开机自启、通知等 -->
+        <!-- 必要权限 -->
         <config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
             <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -45,7 +45,7 @@
             <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
         </config-file>
 
-        <!-- 注册前台服务和广播接收器（对应 TimerForegroundService.java 和 BootReceiver.java） -->
+        <!-- 注册前台服务和广播接收器 -->
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <service android:name="com.shiguangju.TimerForegroundService"
                      android:foregroundServiceType="dataSync"
@@ -59,13 +59,13 @@
             </receiver>
         </config-file>
 
-        <!-- 自定义插件引用（如果有 plugin.xml 则无需在此重复，但为保证兼容性可保留） -->
+        <!-- 自定义插件 -->
         <feature name="TimerServicePlugin">
             <param name="android-package" value="com.shiguangju.TimerServicePlugin" />
         </feature>
     </platform>
 
-    <!-- iOS 占位（暂不涉及） -->
+    <!-- iOS 占位 -->
     <platform name="ios">
         <preference name="deployment-target" value="13.0" />
     </platform>
