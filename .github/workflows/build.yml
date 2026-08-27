@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: 20
 
-      # 锁定 Gradle 版本为 8.4，避免 Gradle 9 与 Cordova-Android 12 不兼容
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
@@ -32,8 +31,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android Licenses
-        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+      - name: 安装指定版本的 Build Tools 33.0.2
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "build-tools;33.0.2"
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      - name: 验证 SDK 组件
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls $ANDROID_HOME/build-tools/
 
       - name: Install Cordova
         run: npm install -g cordova
