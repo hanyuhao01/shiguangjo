@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="com.shiguangju.timer"
+    version="1.0.0">
+    <name>ShiGuangJu Timer Service</name>
+    <description>前台服务 + 电池优化白名单 + 自启动</description>
+
+    <engines>
+        <engine name="cordova" version=">=10.0.0" />
+    </engines>
+
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+            <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service
+                android:name="com.shiguangju.app.TimerForegroundService"
+                android:exported="false"
+                android:foregroundServiceType="dataSync" />
+            <receiver
+                android:name="com.shiguangju.app.BootReceiver"
+                android:exported="true"
+                android:enabled="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED" />
+                    <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <source-file src="src/android/TimerForegroundService.java"
+            target-dir="src/com/shiguangju/app" />
+        <source-file src="src/android/BootReceiver.java"
+            target-dir="src/com/shiguangju/app" />
+
+        <js-module name="TimerService" src="www/timer-service.js">
+            <clobbers target="window.TimerService" />
+        </js-module>
+    </platform>
+</plugin>
