@@ -1,4 +1,4 @@
-package __PACKAGE_NAME__;
+package com.shiguangju.app;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
