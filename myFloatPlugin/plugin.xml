@@ -17,6 +17,6 @@
         </config-file>
 
         <source-file src="src/android/FloatPlugin.java"
-                     target-dir="src/$PACKAGE_NAME$/"/>
+                     target-dir="src/com/shiguangju/app/"/>
     </platform>
 </plugin>
