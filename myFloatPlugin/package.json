@@ -1,0 +1,23 @@
+{
+  "name": "my-float-plugin",
+  "version": "1.0.0",
+  "description": "Simple system overlay float window",
+  "cordova": {
+    "id": "my-float-plugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android",
+    "float",
+    "overlay"
+  ],
+  "engines": {
+    "cordova": ">=3.0.0"
+  },
+  "author": "your-name",
+  "license": "MIT"
+}
