@@ -17,6 +17,6 @@
         </config-file>
 
         <source-file src="src/android/FloatPlugin.java"
-                     target-dir="src/com/example/app/"/>   <!-- 这里要改成你自己的包名 -->
+                     target-dir="src/$PACKAGE_NAME$/"/>
     </platform>
 </plugin>
