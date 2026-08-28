@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="my-float-plugin"
+        version="1.0.0">
+    <name>MyFloatPlugin</name>
+    <description>Simple system overlay float window</description>
+    <license>MIT</license>
+
+    <engines>
+        <engine name="cordova" version=">=3.0.0"/>
+    </engines>
+
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+        </config-file>
+
+        <source-file src="src/android/FloatPlugin.java"
+                     target-dir="src/com/example/app/"/>   <!-- 这里要改成你自己的包名 -->
+    </platform>
+</plugin>
