@@ -38,7 +38,7 @@
   --btn-text-shadow: 0 1px 3px rgba(0,0,0,0.55);
   --cat-bg-start: #2a3050;
   --cat-bg-end: #181e36;
-  --cat-colors: #FF6B6B,#4ECDC4,#45B7D1,#96CEB4,#FFEAA7,#DDA0DD,#98D8C8,#F7DC6F,#BB8FCE,#85C1E9,#F0B27A,#82E0AA;
+  --cat-colors: #FF6B6B,#4ECDC4,#45B7D1,#96CEB4,#FFEAA7,#DDA0DD,#F39C12,#2ECC71,#E74C3C,#3498DB,#9B59B6,#1ABC9C;
 }
 
 [data-theme="light"] {
@@ -137,7 +137,6 @@ html, body {
 .app-title { font-size:20px; font-weight:800; letter-spacing:1.5px; color:var(--title-color); }
 .top-actions { display:flex; gap:8px; }
 .icon-btn { width:42px; height:42px; border-radius:12px; font-size:18px; background:linear-gradient(180deg,#3a4060,#232a48); }
-.float-btn-save { background:linear-gradient(180deg,#43a047,#2e7d32); }
 [data-theme="light"] .icon-btn { background:linear-gradient(180deg,#d4c5b3,#b8a890); color:var(--text-primary); }
 
 .date-nav-bar {
@@ -557,7 +556,6 @@ canvas { max-width:100%; }
     <div class="float-btn-row">
       <button class="float-btn float-btn-play" id="floatPlayPause">⏸</button>
       <button class="float-btn float-btn-cat" id="floatCatBtn">📂</button>
-      <button class="float-btn float-btn-save" id="floatSaveBtn" style="display:none;">💾</button>
     </div>
   </div>
   <button class="float-toggle" id="floatToggle">◀</button>
@@ -592,10 +590,10 @@ canvas { max-width:100%; }
   <div class="top-bar">
     <div class="app-title">拾光橘</div>
     <div class="top-actions">
+      <button class="neu-btn icon-btn" id="settingsBtn" title="后台权限设置" style="font-size:20px;">⚙️</button>
       <button class="neu-btn icon-btn" id="themeToggle">🌙</button>
       <button class="neu-btn icon-btn" id="soundToggle">🔊</button>
       <button class="neu-btn icon-btn" id="floatShowBtn" title="显示悬浮窗">📌</button>
-    <button class="neu-btn icon-btn" id="settingsBtn" title="后台权限设置">⚙️</button>
     </div>
   </div>
 
@@ -974,58 +972,84 @@ function init(){
   setInterval(updateTimer,30000);
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
-
-  // ===== 拾光橘：悬浮窗保存按钮 + 设置弹窗 =====
-  function initFloatSaveBtn() {
-    var saveBtn = document.getElementById('floatSaveBtn');
-    if (!saveBtn) return;
-    saveBtn.onclick = function() {
-      if (typeof saveRecord === 'function') { saveRecord(); }
-      if (typeof updateFloat === 'function') { updateFloat(); }
-    };
-  }
-  function initSettingsPopup() {
-    var btn = document.getElementById('settingsBtn');
-    var popup = document.getElementById('settingsPopup');
-    var closeBtn = document.getElementById('settingsClose');
-    if (!btn || !popup) return;
-    btn.onclick = function() { popup.classList.add('show'); };
-    if (closeBtn) { closeBtn.onclick = function() { popup.classList.remove('show'); }; }
-    popup.onclick = function(e) { if (e.target === popup) popup.classList.remove('show'); };
-  }
-  // 在页面初始化时调用
-  window.addEventListener('DOMContentLoaded', function() {
-    initFloatSaveBtn();
-    initSettingsPopup();
-    // 若 updateFloat 存在，劫持以控制保存按钮显隐
-    if (typeof updateFloat === 'function') {
-      var origUpdate = updateFloat;
-      updateFloat = function() {
-        origUpdate.apply(this, arguments);
-        var saveBtn = document.getElementById('floatSaveBtn');
-        if (saveBtn && typeof timerState !== 'undefined' && typeof timerElapsed !== 'undefined') {
-          saveBtn.style.display = (timerState === 'paused' && timerElapsed > 0) ? '' : 'none';
-        }
-      };
-    }
-  });
-
 </script>
 
-<!-- 设置弹窗：后台权限引导 -->
-<div class="date-picker-popup" id="settingsPopup" style="max-width:360px;">
+
+<!-- ===== 后台权限 / 悬浮窗设置弹窗 ===== -->
+<div class="date-picker-popup" id="settingsPopup" style="max-width:340px;">
   <div class="date-picker-header">
     <span>⚙️ 后台权限设置</span>
-    <button id="settingsClose">✕</button>
+    <button id="settingsClose" style="font-size:18px;">✕</button>
   </div>
   <div style="padding:10px 0;font-size:13px;line-height:1.9;">
-    <p>📌 <b>① 悬浮窗权限</b><br>设置 → 应用设置 → 权限管理 → 特殊权限 → 显示在其他应用上层 → 始终允许</p>
-    <p>🔋 <b>② 忽略电池优化</b><br>设置 → 应用设置 → 应用管理 → 拾光橘 → 电池 → 省电策略 → 无限制</p>
-    <p>🛡️ <b>③ 锁屏保持运行</b><br>系统多任务界面 → 下拉锁定本应用</p>
-    <p>🚀 <b>④ 自启动</b><br>设置 → 应用管理 → 自启动 → 开启</p>
-    <p style="color:var(--text-muted);margin-top:12px;font-size:12px;">⚠️ 说明：WebView 悬浮窗仅在应用内可拖动显示；跨应用全局悬浮窗需系统级权限，本应用以稳定运行为优先。</p>
+    <p style="margin-bottom:8px;">📌 <b>① 悬浮窗（显示在其他应用上层）</b><br>设置 → 应用设置 → 权限管理 → 特殊权限 → 显示在其他应用上层 → <b>始终允许</b></p>
+    <p style="margin-bottom:8px;">🔋 <b>② 电池无限制</b><br>设置 → 应用管理 → 拾光橘 → 电池与性能 → 省电策略 → <b>无限制</b></p>
+    <p style="margin-bottom:8px;">🛡️ <b>③ 锁屏保活</b><br>多任务界面（上滑） → 下拉应用卡片 → <b>锁定</b></p>
+    <p style="margin-bottom:8px;">🚀 <b>④ 自启动</b><br>设置 → 应用管理 → 自启动 → <b>开启</b></p>
+    <p style="color:var(--text-muted);margin-top:10px;font-size:12px;">⚠️ 提示：当前悬浮窗在应用内始终置顶；如需「退出 App 后仍可见」的系统级悬浮窗，请确保已授予 ① 并重启 App。若首次打开未自动弹授权，请点下方「请求悬浮窗权限」。</p>
+    <div style="text-align:center;margin-top:12px;">
+      <button class="neu-btn ctrl-btn ctrl-btn-primary" id="requestFloatPermBtn" style="font-size:14px;">🔘 请求悬浮窗权限</button>
+    </div>
   </div>
 </div>
 
+<script>
+(function(){
+  "use strict";
+  // ===== 系统级悬浮窗插件桥接（配合 myFloatPlugin） =====
+  function hasFloatPlugin(){
+    return typeof cordova !== "undefined" && cordova.exec;
+  }
+  window.startSystemFloat = function(timeStr){
+    if(!hasFloatPlugin()) return;
+    cordova.exec(function(){ console.log("[Float] started"); },
+                 function(e){ console.error("[Float] start failed", e); },
+                 "FloatPlugin","startFloat",[timeStr||"00:00"]);
+  };
+  window.stopSystemFloat = function(){
+    if(!hasFloatPlugin()) return;
+    cordova.exec(function(){ console.log("[Float] stopped"); },
+                 function(e){ console.error("[Float] stop failed", e); },
+                 "FloatPlugin","stopFloat",[]);
+  };
+  window.requestFloatPermission = function(){
+    if(!hasFloatPlugin()){ alert("悬浮窗插件未就绪，请重新构建安装包。"); return; }
+    cordova.exec(function(granted){
+      if(granted === "1" || granted === true || granted === 1){
+        alert("✅ 已拥有悬浮窗权限");
+      } else {
+        cordova.exec(null,null,"FloatPlugin","requestPermission",[]);
+      }
+    }, function(e){ console.error("[Float] check failed", e); },
+    "FloatPlugin","checkPermission",[]);
+  };
+
+  function bindSettings(){
+    var popup = document.getElementById("settingsPopup");
+    var btn = document.getElementById("settingsBtn");
+    var closeBtn = document.getElementById("settingsClose");
+    var reqBtn = document.getElementById("requestFloatPermBtn");
+    if(!popup || !btn) return;
+    btn.addEventListener("click", function(){ popup.classList.add("show"); });
+    if(closeBtn) closeBtn.addEventListener("click", function(){ popup.classList.remove("show"); });
+    if(reqBtn) reqBtn.addEventListener("click", function(){
+      window.requestFloatPermission();
+      popup.classList.remove("show");
+    });
+    // 点击弹窗外部关闭
+    popup.addEventListener("click", function(e){ if(e.target === popup) popup.classList.remove("show"); });
+  }
+
+  // deviceready（Cordova）或 DOMContentLoaded（浏览器调试）均可
+  if(document.addEventListener){
+    document.addEventListener("deviceready", bindSettings, false);
+    document.addEventListener("DOMContentLoaded", function(){
+      // 防止 deviceready 未触发时（纯浏览器）也绑定
+      setTimeout(bindSettings, 0);
+    }, false);
+  }
+  window.addEventListener("load", bindSettings);
+})();
+</script>
 </body>
 </html>
